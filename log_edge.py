@@ -2,11 +2,11 @@ import numpy as np
 from fir_conv import fir_conv
 
 def log_edge(in_img_array: np.ndarray) -> np.ndarray:
-    "Accepts the input grayscale image in_img_array and outputs resulting
+    """
+    Accepts the input grayscale image in_img_array and outputs resulting
     binary image with values 0 or 1. Edge pixels will be assigned a
     1, pixels that do not belong to an edge get assigned a 0.
-    This function has to call the FIR convolution function."
-    """
+    This function has to call the FIR convolution function.
     Edge detection using Laplacian of Gaussian (LoG) operator.
 
     Parameters:

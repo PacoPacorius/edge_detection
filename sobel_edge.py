@@ -2,13 +2,13 @@ import numpy as np
 from fir_conv import fir_conv
 
 def sobel_edge(in_img_array: np.ndarray, thres: float ) -> np.ndarray:
-    "Accept grayscale input image and the threshold thresh. The threshold is 
+    """
+    Accept grayscale input image and the threshold thresh. The threshold is 
     the minimum value of the gradient's norm where we declare an edge.
     Output is a binary image with values 0 or 1. Edge pixels will be assigned a
     1, pixels that do not belong to an edge get assigned a 0. This function
-    has to call the FIR convolution function."
+    has to call the FIR convolution function.
 
-    """
     Edge detection using Sobel operator.
 
     Parameters:

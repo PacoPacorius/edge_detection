@@ -1,8 +1,9 @@
 import numpy as np
 
 def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray, 
-               V_min: int) -> np.ndarray, np.ndarray:
-    "circ_hough will find a circle in a binary image. Accept input binary image 
+               V_min: int) -> tuple:
+    """
+    circ_hough will find a circle in a binary image. Accept input binary image 
     with only pixel values either 0 or 1. This binary image will be generated 
     with the use of log_edge or sobel_edge functions. R_max is the maximum radius of the 
     circle. dim is an array of 3 values, 2 of them divide the image the 
@@ -11,10 +12,9 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     algorithm. V_min is the minimum number of votes a hough cell must
     receive to be considered part of the circle. Output is the array centers, 
     the coordinates of the centers of the circles detected and the array radii,
-    the radii of the circles detected."
+    the radii of the circles detected.
                     
 
-    """
     Circle detection using Hough transform.
     
     Parameters:
