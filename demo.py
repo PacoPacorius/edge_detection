@@ -35,6 +35,9 @@ thresholds = [50, 100, 150, 200, 250]
 edge_counts = []
 
 for i, thresh in enumerate(thresholds):
+    print("Applying sobel operator edge detection ", i, " of ", len(thresholds), 
+          "with thresh = ", thresh)
+
     # Apply Sobel edge detection
     edge_img = sobel_edge(img, thresh)
 
@@ -57,6 +60,7 @@ plt.title('Edge Points vs Threshold')
 plt.grid(True)
 
 # Apply LoG edge detection
+print("Applying log operator edge detection")
 log_edge_img = log_edge(img)
 
 # Display LoG edge detection result
@@ -67,6 +71,7 @@ plt.axis('off')
 
 # Select one of the Sobel edge images for circle detection
 # Using moderate threshold (100) for good balance
+print("Applying sobel operator edge detection in preparation for circle detection with thresh = ", 100)
 edge_img_for_hough = sobel_edge(img, 100)
 
 # Set parameters for circle detection
@@ -80,6 +85,8 @@ V_min_values = [50, 100, 150, 200, 250]
 plt.figure(figsize=(15, 10))
 
 for i, V_min in enumerate(V_min_values):
+    print("Finding circle with hough algorithm ", i, " of ", len(V_min_values), 
+          " with V_min = ", V_min)
     centers, radii = circ_hough(edge_img_for_hough, R_max, dim, V_min)
 
     plt.subplot(2, 3, i+1)
