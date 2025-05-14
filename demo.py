@@ -24,13 +24,20 @@ functions to draw the circle.
 # Load the image
 #img = np.array(Image.open('basketball_large.png').convert('L'))
 img1 = cv.imread('basketball_large.png', cv.IMREAD_GRAYSCALE)
-img = cv.resize(img1, None, 0.5, 0.5, cv.INTER_AREA)
+img = cv.resize(img1, None, None, 0.5, 0.5, cv.INTER_AREA)
+print('shape of original img =', img1.shape, '\t shape of shrunken img =', img.shape)
 
 # Display the original image
 plt.figure(figsize=(12, 10))
 plt.subplot(331)
-plt.imshow(img, cmap='gray')
+plt.imshow(img1, cmap='gray')
 plt.title('Original Image')
+plt.axis('off')
+
+plt.figure(figsize=(12, 10))
+plt.subplot(331)
+plt.imshow(img, cmap='gray')
+plt.title('Shrunken Image')
 plt.axis('off')
 
 # Test Sobel edge detection with different thresholds
@@ -67,10 +74,11 @@ print("Applying log operator edge detection")
 log_edge_img = log_edge(img)
 
 # Display LoG edge detection result
-plt.subplot(338)
+plt.subplot(111)
 plt.imshow(log_edge_img, cmap='gray')
-plt.title(f'LoG (edges={np.sum(log_edge_img)})')
+plt.title(f'LoG (edges={np.sum(log_edge_img)}), central differences')
 plt.axis('off')
+plt.show()
 
 # Select one of the Sobel edge images for circle detection
 # Using moderate threshold (100) for good balance
@@ -82,7 +90,7 @@ R_max = min(img.shape) // 2  # Maximum radius is half of the smallest dimension
 dim = np.array([50, 50, 30])  # Hough space dimensions
 
 # Apply circle detection with different V_min values
-V_min_values = [50, 100, 150, 200, 250]
+V_min_values = [50*10**5, 100*10**6, 150*10**7, 200*10**8, 250*10**10]
 
 # Create a new figure for circle detection results
 plt.figure(figsize=(15, 10))
@@ -105,9 +113,9 @@ for i, V_min in enumerate(V_min_values):
     plt.axis('off')
 
     # Print information about detected circles
-    print(f"V_min = {V_min}, Detected {len(radii)} circles")
-    for j, (center, radius) in enumerate(zip(centers, radii)):
-        print(f"  Circle {j+1}: center = ({center[0]:.1f}, {center[1]:.1f}), radius = {radius:.1f}")
+    print("V_min =", V_min, "\tDetected ", len(radii), " circles")
+    #for j, (center, radius) in enumerate(zip(centers, radii)):
+        #print("Circle {j+1}: center = ({center[0]:.1f}, {center[1]:.1f}), radius = {radius:.1f}")
 
 plt.tight_layout()
 plt.show()

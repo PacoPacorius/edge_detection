@@ -38,6 +38,7 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     """
     # Extract dimensions for the Hough space
     dim_x, dim_y, dim_r = dim
+    V_min = 1000
     
     # Calculate step sizes
     step_x = in_img_array.shape[1] / dim_x
