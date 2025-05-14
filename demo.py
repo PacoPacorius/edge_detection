@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from PIL import Image
+import cv2 as cv
 from sobel_edge import sobel_edge
 from log_edge import log_edge
 from circ_hough import circ_hough
@@ -21,7 +22,9 @@ top. We do this five times for different V_min values. We use ready Python
 functions to draw the circle.
 """
 # Load the image
-img = np.array(Image.open('basketball_large.png').convert('L'))
+#img = np.array(Image.open('basketball_large.png').convert('L'))
+img1 = cv.imread('basketball_large.png', cv.IMREAD_GRAYSCALE)
+img = cv.resize(img1, None, 0.5, 0.5, cv.INTER_AREA)
 
 # Display the original image
 plt.figure(figsize=(12, 10))
