@@ -20,9 +20,9 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     # a, b, r = a_step * index(max(vote)), b_step * index(max(vote)), r_step * index(max(vote))
     # return tripleta a, b, r me ta perissotera votes
 
-    r_step = R_max / dim[2]
-    cols_step = in_img_array.shape[1] / dim[0]
-    rows_step = in_img_array.shape[0] / dim[1]
+    r_step = int(R_max / dim[2])
+    cols_step = int(in_img_array.shape[1] / dim[0])
+    rows_step = int(in_img_array.shape[0] / dim[1])
     vote = np.zeros((dim[0], dim[1], dim[2]))
 
 
