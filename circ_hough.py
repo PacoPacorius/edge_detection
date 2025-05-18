@@ -20,25 +20,25 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     # a, b, r = a_step * index(max(vote)), b_step * index(max(vote)), r_step * index(max(vote))
     # return tripleta a, b, r me ta perissotera votes
 
-    r_step = int(R_max / dim[2])
-    a_step = int(in_img_array.shape[1] / dim[0])
-    b_step = int(in_img_array.shape[0] / dim[1])
+    r_step = R_max / dim[2]
+    cols_step = in_img_array.shape[1] / dim[0]
+    rows_step = in_img_array.shape[0] / dim[1]
     vote = np.zeros((dim[0], dim[1], dim[2]))
 
 
-    for x in range(0, in_img_array.shape[1]):
-        for y in range(0, in_img_array.shape[0]):
-            if in_img_array[y,x] == 1:
-                for r_idx in range(1, dim[2]):
+    for columns in range(0, in_img_array.shape[1]):
+        for rows in range(0, in_img_array.shape[0]):
+            if in_img_array[rows,columns] == 1:
+                for r_idx in range(0, dim[2]):
                     r = (r_idx + 0.5) * r_step
                     for a_idx in range(0, dim[0]):
-                        a = (a_idx + 0.5) * a_step
+                        a = (a_idx + 0.5) * cols_step
                         for b_idx in range(0, dim[1]):
-                            b = (b_idx + 0.5) * b_step
-                            tolerance = max(2.0, 0.1 * r)
-                            if (x - a)**2 + (y - b)**2 - r**2 < tolerance:
+                            b = (b_idx + 0.5) * rows_step
+                            tolerance = max(1e-2, 0.1 * r)
+                            dist = np.hypot(a - columns, b - rows)
+                            if abs(dist - r) < tolerance:
                                 vote[a_idx, b_idx, r_idx] = vote[a_idx, b_idx, r_idx] + 1
-    print(vote)
     # Find the bin with maximum votes
     max_votes = np.max(vote)
 
@@ -52,8 +52,8 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     a_idx, b_idx, r_idx = max_indices
 
     # Calculate center coordinates and radius (center of the bins)
-    center_x = (a_idx + 0.5) * a_step
-    center_y = (b_idx + 0.5) * b_step
+    center_x = (a_idx + 0.5) * cols_step
+    center_y = (b_idx + 0.5) * rows_step
     radius = (r_idx + 0.5) * r_step
 
     # Create return arrays
@@ -70,6 +70,40 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     #centers = np.array([max_indices[0] * a_step, max_indices[1] * b_step])
     #radius = np.array([max_indices[2] * r_step])
     #return centers, radius
+
+def circ_hough3(in_img_array: np.ndarray, R_max: float, dim: np.ndarray, V_min: int) -> tuple:
+    height, width = in_img_array.shape
+    accumulator = np.zeros((dim[0], dim[1], dim[2]), dtype=int)
+
+    a_step = width / dim[0]
+    b_step = height / dim[1]
+    r_step = R_max / dim[2]
+
+    edge_points = np.argwhere(in_img_array == 1)
+
+    for y, x in edge_points:
+        for r_idx in range(dim[2]):
+            r = (r_idx + 0.5) * r_step
+            for angle in np.linspace(0, 2*np.pi, 72):  # finer angular resolution
+                a = x - r * np.cos(angle)
+                b = y - r * np.sin(angle)
+
+                a_idx = int(a / a_step)
+                b_idx = int(b / b_step)
+
+                if 0 <= a_idx < dim[0] and 0 <= b_idx < dim[1]:
+                    accumulator[a_idx, b_idx, r_idx] += 1
+
+    max_votes = np.max(accumulator)
+    if max_votes < V_min:
+        return np.array([]), np.array([])
+
+    a_idx, b_idx, r_idx = np.unravel_index(np.argmax(accumulator), accumulator.shape)
+    center_x = (a_idx + 0.5) * a_step
+    center_y = (b_idx + 0.5) * b_step
+    radius = (r_idx + 0.5) * r_step
+
+    return np.array([[center_x, center_y]]), np.array([radius])
 
 def circ_hough2(in_img_array: np.ndarray, R_max: float, dim: np.ndarray, V_min: int) -> tuple:
     """

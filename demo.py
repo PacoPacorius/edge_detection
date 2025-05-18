@@ -5,7 +5,7 @@ from PIL import Image
 import cv2 as cv
 from sobel_edge import sobel_edge
 from log_edge import log_edge
-from circ_hough import circ_hough
+import circ_hough
 
 """ 
 In this file we call the necessary functions are called to detect the circle inside 
@@ -27,18 +27,20 @@ img1 = cv.imread('basketball_large.png', cv.IMREAD_GRAYSCALE)
 img = cv.resize(img1, None, None, 0.5, 0.5, cv.INTER_AREA)
 print('shape of original img =', img1.shape, '\t shape of shrunken img =', img.shape)
 
-## Display the original image
-#plt.figure(figsize=(12, 10))
-#plt.subplot(331)
-#plt.imshow(img1, cmap='gray')
-#plt.title('Original Image')
-#plt.axis('off')
-#
-#plt.figure(figsize=(12, 10))
-#plt.subplot(331)
-#plt.imshow(img, cmap='gray')
-#plt.title('Shrunken Image')
-#plt.axis('off')
+
+ Display the original image
+plt.figure(figsize=(12, 10))
+plt.subplot(331)
+plt.imshow(img1, cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+
+plt.figure(figsize=(12, 10))
+plt.subplot(331)
+plt.imshow(img, cmap='gray')
+plt.title('Shrunken Image')
+plt.axis('off')
+plt.show()
 #
 ## Test Sobel edge detection with different thresholds
 #thresholds = [50, 100, 150, 200, 250]
@@ -99,7 +101,7 @@ plt.figure(figsize=(15, 10))
 for i, V_min in enumerate(V_min_values):
     print("Finding circle with hough algorithm ", i, " of ", len(V_min_values), 
           " with V_min = ", V_min)
-    centers, radii = circ_hough(edge_img_for_hough, R_max, dim, V_min)
+    centers, radii = circ_hough.circ_hough(edge_img_for_hough, R_max, dim, V_min)
 
     plt.subplot(2, 3, i+1)
     plt.imshow(img, cmap='gray')
