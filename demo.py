@@ -60,7 +60,7 @@ for i, thresh in enumerate(thresholds):
     # Display Sobel edge detection results
     plt.subplot(3, 3, i+2)
     plt.imshow(edge_img, cmap='gray')
-    plt.title(f'Sobel (thresh={thresh}, edges={edge_count})')
+    plt.title(f'Sobel, thresh={thresh}')
     plt.axis('off')
 
 # Plot the number of edge points vs threshold
@@ -68,7 +68,7 @@ plt.subplot(331)
 plt.plot(thresholds, edge_counts, 'b-o')
 plt.xlabel('Threshold')
 plt.ylabel('Number of Edge Points')
-plt.title('Edge Points vs Threshold')
+plt.title('Edge Points over Thresholds')
 plt.grid(True)
 
 # Apply LoG edge detection
@@ -83,16 +83,16 @@ plt.axis('off')
 plt.show()
 
 # Select one of the Sobel edge images for circle detection
-# Using moderate threshold (100) for good balance
-edge_img_for_hough = sobel_edge(img, 100)
+# Using moderate threshold (150) for good balance
+edge_img_for_hough = sobel_edge(img, 150)
 
 # Set parameters for circle detection
 R_max = min(img.shape) // 2  # Maximum radius is half of the smallest dimension
 dim = np.array([32, 32, 32])  # Hough space dimensions
 
 # Apply circle detection with different V_min values
-V_min_values = [50*10**1, 100*10**2, 150*10**3, 200*10**4, 250*10**5]
-V_min_values = [1000]
+V_min_values = [50*10**1, 100*10**1, 50*10**2, 200*10**2, 250*10**2]
+#V_min_values = [5000]
 
 # Create a new figure for circle detection results
 plt.figure(figsize=(15, 10))

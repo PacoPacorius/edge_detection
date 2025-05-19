@@ -32,7 +32,7 @@
 Εικόνας. Ο στόχος της εργασίας είναι η ανίχνευση ακμών με τους τελεστές Sobel
 και Laplacian of Gaussian και η ανίχνευση κύκλων με βάση τον αλγόριθμο Hough.
 O αλγόριθμος Hough είναι τροποποιημένος για να ανιχνεύει κύ\-κλους αντί για 
-ευθείες. Ακολουθεί η επεξήγηση των παραδοτέων συναρτήσεων.
+ευθείες. Ακολουθεί η επεξήγηση του demo.py και των παραδοτέων συναρτήσεων.
 
 \section{Αρχείο επίδειξης demo.py}
 Στο αρχείο demo.py καλούνται όλες οι παραδοτέες συναρτήσεις για να γίνει η 
@@ -48,20 +48,132 @@ opencv). Η αρχική και η σμικρυσμένη εικόνα εμφα�
 ενότητα~\ref{log}. Οι δυαδικές εικόνες-αποτελέσματα των δύο συναρτήσεων 
 προβάλλονται στην οθόνη μαζί. Επίσης δημιουργείται
 ένα plot του αριθμού των σημείων ακμών που βρέθηκαν για διάφορες τιμές κατωφλίων. 
-\emph{ΣΥΓΚΡΙΣΗ ΕΙΚΟΝΩΝ SOBEL ΜΕ LOG}.
 
-Ακολουθεί η ανίχνευση κύκλων με Hough. Για προετοιμασία φιτάχνεται μια δυαδική
+Από τα αποτελέσματα των αλγορίθων μπορούμε να εξάγουμε διάφορα συμπεράσματα. 
+Μεταξύ των δυαδικών εικόνων Sobel βλέπουμε ότι όσο μικρότερο είναι το threshold
+τόσο πιο καθαρές και έντονες φαίνονται οι ακμές της εικόνας. Για πολύ μικρές τιμές 
+π.χ. για $threshold = 50$ εμφανίζεται θόρυβος ο οποίος είναι ανεπιθύμητος, δεν 
+αντιστοιχεί σε ακμές. Συγκρίνοντας τις εικόνες Sobel με την εικόνα LoG βλέπουμε
+ότι η δεύτερη έχει λεπτότερες ακμές και περισσότερο θόρυβο από τις εικόνες 
+Sobel. Αυτό είναι αναμενόμενο, καθώς από τη φύση του η μέθοδος του τελεστή LoG
+είναι πιο ευαίσθητη στον θόρυβο, με το αντάλλαγμα ότι μπορεί να ανιχνεύσει πιο 
+λεπτές ακμές. Στην παρούσα εφαρμογή φαίνεται ο τελεστής Sobel να κάνει καλύτερη
+δουλειά όμως.
+
+Ακολουθεί η ανίχνευση κύκλων με Hough. Για προετοιμασία φτιάχνεται μια δυαδική
 εικόνα ακμών με τη χρήση του τελεστή Sobel και κατώφλι $100$. Πειραματικά 
 φάνηκε ότι για αυτή την εικόνα η συγκεκριμένη τιμή του κατωφλιού είχε ένα 
 αρκετά καλό αποτέλεσμα. Η δυαδική εικόνα αυτή είναι η είσοδος της συνάρτησης 
-circ\_hough η οποία επεξηγείται αναλυτικά στην ενότητα~\ref{hough}. 
-\emph{binning. V\_min. xrhsh circle apo matplotlib. anakriveies logw binning.} 
+circ\_hough. Η υλοποίηση του αλγορίθμου Hough για κύκλους επεξηγείται αναλυτικά 
+στην ενότητα~\ref{hough}. 
+Αρχικοποιούνται οι διαστάσεις του πίνακα Hough (32 για τετμημένη και τεταγμένη
+του κέντρου του πιθανού κύκλου και 32 για την ακτίνα του κύκλου), η μέγιστη 
+ακτίνα του κύκλου στο μισό της μικρότερης διάστασης της εικόνας και οι ελάχιστες
+ψήφοι για να ανιχνευτεί ο κύκλος σε 1000. Για την ώρα το πρόγραμμα επίδειξης 
+τρέχει τον αλγόριθμο Hough για κύκλους μόνο για έναν κύκλο. Αφού τρέξει ο
+αλγόριθμος και εφόσον ανιχνεύσει κύκλος, αυτός προβάλλεται στην οθόνη πάνω 
+από την αρχική εικόνα (τη σμικρυσμένη ασπρόμαυρη εικόνα, όχι τη δυαδική εικόνα
+αποτέλεσμα του τελεστή Sobel). Μπορούμε να δούμε ότι η κύκλος ανιχνεύεται σωστά,
+όμως με κάποιο μικρό offset στο κέντρο του κύκλου και στην ακτίνα. Αυτό οφείλεται
+στην ανακρίβεια λόγω μικρού αριθμού bins που χωρίστηκαν οι συντεταγμένες του 
+κέντρου του κύκλου και η ακτίνα.
+
+\emph{ΠΟΛΛΟΙ ΚΥΚΛΟΙ ΓΙΑ ΔΙΑΦΟΡΑ V\_min;} 
 \section{fir\_conv}
+Η συνάρτηση fir\_conv υλοποιεί δισδιάστατη συνέλιξη μεταξύ μιας grayscale
+εικόνας και ενός FIR φίλτρου / πεπερασμένης συνελικτικής μάσκας. Βρίσκεται στο 
+αρχείο fir\_conv.py. Προαιρετικά έχει σαν είσοδο και τις αρχές των συντεταγμένων 
+της εικόνας και της συνελικτικής μάσκας. Αν δεν δοθεί κάποια είσοδος, η αρχή 
+των συντεταγμένων για τη συνελικτική μάσκα είναι το κέντρο της και για την εικόνα
+είναι στο ίδιο σημείο με αυτό που ορίστηκε όταν φορτώθηκε η εικόνα σε numpy array
+(εφόσον έγινε χρήση opencv, η αρχή των συντεταγμένων της εικόνας είναι η πάνω
+αριστερά γωνία). Υπολογίζονται οι διαστάσεις της εικόνας εξόδου της συνέλιξης.
+Αν $N_1$ και $N_2$ οι διαστάσεις της εικόνας και $n_1$ και $n_2$ οι διαστάσεις
+της μάσκας, η εικόνα εξόδου θα έχει διαστάσεις $(N_1 - n_1 + 1, N_2 - n_2 + 1)$.
+Η αρχή των συντεταγμένων της εικόνας εξόδου είναι η αρχή των συντεταγμένων της 
+εικόνας + η αρχή των συντεταγμένων της συνελικτικής μάσκας. Έπειτα η συνέλιξη 
+πραγματοποιείται ολισθαίνοντας την συνελικτική μάσκα πάνω από την εικόνα εισόδου
+και αθροίζοντας τα γινόμενα των στοιχείων της μάσκας με τα αντίτοιχα στοιχεία 
+της εικόνας. Η έξοδος είναι η εικόνα εξόδου της συνέλιξης και η αρχή των 
+συντεταγμένων αυτής της εικόνας.
 
 \section{sobel\_edge}\label{sobel}
+Η συνάρτηση sobel\_edge υλοποιεί την μέθοδο εύρεσης ακμών με τον τελεστή 
+Sobel. Βρίσκεται στο αρχείο sobel\_edge.py. Βρίσκει τις ακμές μιας εικόνας
+εισόδου και παράγει ως έξοδο μια δυαδική εικόνα που έχει άσπρα pixels στις 
+ακμές και μαύρα pixels οπουδήποτε αλλού. Αρχικά ορίζονται οι δύο πίνακες Sobel
+για την τεταγμένη και την τετμημένη:
+
+\begin{gather}
+    sobel_x = \left[\begin{matrix}
+        -1, 0, 1 \\
+        -2, 0, 2 \\
+         1, 0, 1
+    \end{matrix}\right] \\
+    sobel_y = \left[\begin{matrix}
+        -1, -2, -1 \\
+         0,  0,  0 \\
+         1,  2,  1
+    \end{matrix}\right] 
+\end{gather}
+Έπειτα χρησιμοποιείται η συνάρτηση fir\_conv για να συνελιχθεί οι $sobel_x$ και
+$sobel_y$ με την εικόνα. Με αυτόν τον τρόπο υπολογίζεται το gradient της αρχικής
+εικόνας κατά άξονα $x$ και $y$ αντίστοιχα ($grad_x$, $grad_y$). Έπειτα υπολογίζεται 
+η νόρμα του συνολικού gradient:
+
+\begin{equation}
+    |gradient| = \sqrt{grad_x^2 + grad_y^2}
+\end{equation}
+Δημιουργείται μια νέα εικόνα ίδιων διαστάσεων με την εικόνα εισόδου στην οποία 
+τα pixels που έχουν $|gradient| \geq threshold$ βάφονται άσπρα και όλα τα 
+υπόλοιπα βάφονται μαύρα. Αυτή είναι η δυαδική εικόνα εξόδου.
 
 \section{log\_edge}\label{log}
+H συνάρτηση log\_edge υλοποιεί την εύρεση ακμών 
+
+%3. log_edge.py
+%
+%This file implements edge detection using the Laplacian of Gaussian (LoG) approach:
+%
+    %Purpose: Detects edges by looking for zero crossings in the second derivative
+    %Function: log_edge(in_img_array)
+    %Steps:
+        %Defines a 5×5 Laplacian of Gaussian kernel (normalized)
+        %Applies this kernel to the input image using the fir_conv function
+        %Calculates gradients in x and y directions using central differences
+        %Computes the gradient magnitude
+        %Creates a binary output image by checking for zero crossings:
+            %For each pixel, examines all 8 neighboring pixels
+            %If the center pixel has a different sign from any neighbor (indicating a zero crossing) AND the gradient magnitude exceeds a threshold (10), marks it as an edge (1)
+            %Otherwise, marks it as non-edge (0)
+        %Returns the binary edge image
+%
+%The LoG method is good at finding edges and is less sensitive to noise than simple gradient methods.
+%4. circ_hough.py
+%
+%This file implements circle detection using the Hough transform:
+%
+    %Purpose: Detects circles in binary images
+    %Function: circ_hough(in_img_array, R_max, dim, V_min)
+    %Steps:
+        %Takes a binary input image and parameters for circle detection:
+            %R_max: Maximum radius to consider
+            %dim: Dimensions for binning/discretization
+            %V_min: Minimum votes required to consider a circle
+        %Creates a 3D accumulator array (voting space) with dimensions for x, y, and radius
+        %For each edge pixel in the input image:
+            %For each possible radius:
+                %For each possible center position:
+                    %Checks if the distance between the edge pixel and this potential center is close to the current radius
+                    %If so, increments the vote count for this center-radius combination
+        %Finds the bin with maximum votes
+        %If the maximum votes exceed the threshold:
+            %Extracts the center coordinates and radius from the bin indices
+            %Returns these as the detected circle
+        %If no circle meets the threshold, returns empty arrays
 
 \section{circ\_hough}\label{hough}
+Η υλοποίηση της συνάρτησης circ\_hough βρίσκεται στο αρχείο circ\_hough.py.
+Αρχικά γίνεται η διαμέριση των 
 
 \end{document}

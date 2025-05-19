@@ -4,9 +4,8 @@ def fir_conv(in_img_array: np.ndarray, h: np.ndarray, in_origin: np.ndarray = No
              mask_origin: np.ndarray = None) -> tuple:
     """
     Accept a grayscale image with in_img_array. Perform FIR convolution with h. 
-    Optionally, 
-    define beginning of image coords with in_origin and convolution mask 
-    coords with mask_origin. Output the image-result of convolution and 
+    Optionally, define beginning of image coords with in_origin and convolution 
+    mask coords with mask_origin. Output the image-result of convolution and 
     optionally the beginning of the output image's coords.
     Perform FIR convolution of a grayscale image with a mask.
 
@@ -28,6 +27,7 @@ def fir_conv(in_img_array: np.ndarray, h: np.ndarray, in_origin: np.ndarray = No
     out_origin : np.ndarray, optional
         Beginning coordinates of the output image
     """
+
     # If origins are not provided, use defaults (center of mask)
     if in_origin is None:
         in_origin = np.array([0, 0])
