@@ -17,6 +17,7 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
         np.ndarray: Array of radii of detected circles
     """
 
+    # Calculate steps and initialize hough voting matrix
     r_step = R_max / dim[2]
     cols_step = in_img_array.shape[1] / dim[0]
     rows_step = in_img_array.shape[0] / dim[1]
@@ -25,13 +26,18 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
 
     for columns in range(0, in_img_array.shape[1]):
         for rows in range(0, in_img_array.shape[0]):
+            # For each edge pixel
             if in_img_array[rows,columns] == 1:
+                # For each radius
                 for r_idx in range(0, dim[2]):
                     r = (r_idx + 0.5) * r_step
                     for a_idx in range(0, dim[0]):
                         a = (a_idx + 0.5) * cols_step
                         for b_idx in range(0, dim[1]):
                             b = (b_idx + 0.5) * rows_step
+                            # if the edge pixel belongs to the circle with 
+                            # center (a,b) and radius r, add a vote to the Hough
+                            # voting matrix
                             tolerance = max(1e-2, 0.1 * r)
                             dist = np.hypot(a - columns, b - rows)
                             if abs(dist - r) < tolerance:

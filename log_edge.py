@@ -20,7 +20,6 @@ def log_edge(in_img_array: np.ndarray) -> np.ndarray:
         Binary image with edges (1) and non-edges (0)
     """
     # Define Laplacian of Gaussian (LoG) kernel
-    # We'll use a 5x5 LoG kernel with sigma ≈ 1.0
     log_kernel = np.array([
         [0, 0, -1, 0, 0],
         [0, -1,-2, -1, 0],
@@ -43,7 +42,6 @@ def log_edge(in_img_array: np.ndarray) -> np.ndarray:
     
     # Calculate gradient magnitude
     gradient_magnitude = np.sqrt(gradient_x**2 + gradient_y**2)
-    # this needs to be much better. try to make a binary tree of decisions.
     # Check for zero crossings between adjacent pixels
     rows, cols = filtered_img.shape
     for i in range(1, rows-1):
