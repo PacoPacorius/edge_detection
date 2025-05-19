@@ -24,7 +24,7 @@ functions to draw the circle.
 
 # Load the image
 img1 = cv.imread('basketball_large.png', cv.IMREAD_GRAYSCALE)
-img = cv.resize(img1, None, None, 0.3, 0.3, cv.INTER_AREA)
+img = cv.resize(img1, None, None, 0.5, 0.5, cv.INTER_AREA)
 print('shape of original img =', img1.shape, '\t shape of shrunken img =', img.shape)
 
 
@@ -91,11 +91,11 @@ R_max = min(img.shape) // 2  # Maximum radius is half of the smallest dimension
 dim = np.array([32, 32, 32])  # Hough space dimensions
 
 # Apply circle detection with different V_min values
-V_min_values = [50*10**1, 100*10**1, 50*10**2, 200*10**2, 250*10**2]
+V_min_values = [5*10**2, 2*10**3, 5*10**3, 1*10**4, 5*10**4]
 #V_min_values = [5000]
 
 # Create a new figure for circle detection results
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(10, 10))
 
 for i, V_min in enumerate(V_min_values):
     print("Finding circle with hough algorithm ", i, " of ", len(V_min_values), 

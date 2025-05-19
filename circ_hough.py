@@ -42,27 +42,40 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
                             dist = np.hypot(a - columns, b - rows)
                             if abs(dist - r) < tolerance:
                                 vote[a_idx, b_idx, r_idx] = vote[a_idx, b_idx, r_idx] + 1
-    # Find the bin with maximum votes
-    max_votes = np.max(vote)
 
-    # Check if max votes exceeds the threshold
-    if max_votes < V_min:
-        # Return empty arrays if no circle meets the threshold
-        return np.array([]), np.array([])
 
-    # Get indices of maximum vote
-    max_indices = np.unravel_index(np.argmax(vote), vote.shape)
-    a_idx, b_idx, r_idx = max_indices
-
-    # Calculate center coordinates and radius (center of the bins)
-    center_x = (a_idx + 0.5) * cols_step
-    center_y = (b_idx + 0.5) * rows_step
-    radius = (r_idx + 0.5) * r_step
-
-    # Create return arrays
-    centers = np.array([[center_x, center_y]])
-    radii = np.array([radius])
-
-    print(f"Circle detected: center=({center_x:.1f}, {center_y:.1f}), radius={radius:.1f}, votes={max_votes}")
-
-    return centers, radii
+ # Find circles with votes >= V_min
+    centers = []
+    radii = []
+    
+    for a_idx in range(dim[0]):
+        for b_idx in range(dim[1]):
+            for r_idx in range(dim[2]):
+                if vote[a_idx, b_idx, r_idx] >= V_min:
+                    # Convert back to image coordinates (center of the bin)
+                    center_x = (a_idx + 0.5) * cols_step
+                    center_y = (b_idx + 0.5) * rows_step
+                    radius = (r_idx + 0.5) * r_step
+                    
+                    centers.append([center_x, center_y])
+                    radii.append(radius)
+    
+    # If no circles found with votes >= V_min, return the best match
+    if len(centers) == 0 and np.max(vote) > 0:
+        ### Uncomment this code to return the most voted circle if V_min is too high ###
+#        # Find the bin with the maximum votes
+#        max_indices = np.unravel_index(np.argmax(vote), vote.shape)
+#        a_idx, b_idx, r_idx = max_indices
+#        
+#        # Convert to image coordinates
+#        center_x = (a_idx + 0.5) * cols_step
+#        center_y = (b_idx + 0.5) * rows_step
+#        radius = (r_idx + 0.5) * r_step
+#        
+#        centers.append([center_x, center_y])
+#        radii.append(radius)
+        
+        print(f"No circles found with votes >= {V_min}.")
+        #print("Returning best match with {vote[a_idx, b_idx, r_idx]} votes.")
+    
+    return np.array(centers), np.array(radii)
