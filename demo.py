@@ -24,7 +24,7 @@ functions to draw the circle.
 
 # Load the image
 img1 = cv.imread('basketball_large.png', cv.IMREAD_GRAYSCALE)
-img = cv.resize(img1, None, None, 0.5, 0.5, cv.INTER_AREA)
+img = cv.resize(img1, None, None, 0.1, 0.1, cv.INTER_AREA)
 print('shape of original img =', img1.shape, '\t shape of shrunken img =', img.shape)
 
 
@@ -91,20 +91,21 @@ R_max = min(img.shape) // 2  # Maximum radius is half of the smallest dimension
 dim = np.array([32, 32, 32])  # Hough space dimensions
 
 # Apply circle detection with different V_min values
-V_min_values = [5*10**2, 2*10**3, 5*10**3, 1*10**4, 5*10**4]
+#V_min_values = [3*10**3, 5*10**3, 1*10**4] #for 0.5 scale
+V_min_values = [500, 750, 1000] #for 0.1 scale
 #V_min_values = [5000]
 
 # Create a new figure for circle detection results
-plt.figure(figsize=(10, 10))
+plt.figure(figsize=(10, 6))
 
 for i, V_min in enumerate(V_min_values):
-    print("Finding circle with hough algorithm ", i, " of ", len(V_min_values), 
+    print("Sobel method finding circle with hough algorithm ", i, " of ", len(V_min_values), 
           " with V_min = ", V_min)
     centers, radii = circ_hough.circ_hough(edge_img_for_hough, R_max, dim, V_min)
 
     plt.subplot(2, 3, i+1)
     plt.imshow(img, cmap='gray')
-    plt.title(f'Circle Detection (V_min={V_min})')
+    plt.title(f'Sobel Circle Detection (V_min={V_min})')
 
     # Draw detected circles
     ax = plt.gca()
@@ -116,9 +117,31 @@ for i, V_min in enumerate(V_min_values):
 
     # Print information about detected circles
     print("V_min =", V_min, "\tDetected ", len(radii), " circles")
-    #for j, (center, radius) in enumerate(zip(centers, radii)):
-        #print("Circle {j+1}: center = ({center[0]:.1f}, {center[1]:.1f}), radius = {radius:.1f}")
 
 plt.tight_layout()
 plt.show()
+plt.figure(figsize=(10, 6))
 
+V_min_values = [600, 800, 1000] #for 0.1 scale
+for i, V_min in enumerate(V_min_values):
+    print("LoG method finding circle with hough algorithm ", i, " of ", len(V_min_values), 
+          " with V_min = ", V_min)
+    centers, radii = circ_hough.circ_hough(log_edge_img, R_max, dim, V_min)
+
+    plt.subplot(2, 3, i+1)
+    plt.imshow(img, cmap='gray')
+    plt.title(f'LoG Circle Detection (V_min={V_min})')
+
+    # Draw detected circles
+    ax = plt.gca()
+    for center, radius in zip(centers, radii):
+        circle = Circle([center[0], center[1]], radius, fill=False, color='red', linewidth=2)
+        ax.add_patch(circle)
+
+    plt.axis('off')
+
+    # Print information about detected circles
+    print("V_min =", V_min, "\tDetected ", len(radii), " circles")
+
+plt.tight_layout()
+plt.show()

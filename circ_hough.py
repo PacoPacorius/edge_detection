@@ -64,8 +64,8 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
     if len(centers) == 0 and np.max(vote) > 0:
         ### Uncomment this code to return the most voted circle if V_min is too high ###
 #        # Find the bin with the maximum votes
-#        max_indices = np.unravel_index(np.argmax(vote), vote.shape)
-#        a_idx, b_idx, r_idx = max_indices
+        max_indices = np.unravel_index(np.argmax(vote), vote.shape)
+        a_idx, b_idx, r_idx = max_indices
 #        
 #        # Convert to image coordinates
 #        center_x = (a_idx + 0.5) * cols_step
@@ -76,6 +76,6 @@ def circ_hough(in_img_array: np.ndarray, R_max: float, dim: np.ndarray,
 #        radii.append(radius)
         
         print(f"No circles found with votes >= {V_min}.")
-        #print("Returning best match with {vote[a_idx, b_idx, r_idx]} votes.")
+        print(f"Best match with {vote[a_idx, b_idx, r_idx]} votes.")
     
     return np.array(centers), np.array(radii)
