@@ -122,6 +122,8 @@ for i, V_min in enumerate(V_min_values):
     print("V_min =", V_min, "\tDetected ", len(radii), " circles")
 
 plt.tight_layout()
+plt.show()
+plt.figure(figsize=(10, 6))
 
 V_min_values = [600, 800, 1000] #for 0.1 scale
 for i, V_min in enumerate(V_min_values):
@@ -129,7 +131,7 @@ for i, V_min in enumerate(V_min_values):
           " with V_min = ", V_min)
     centers, radii = circ_hough.circ_hough(log_edge_img, R_max, dim, V_min)
 
-    plt.subplot(3, 2, i+1)
+    plt.subplot(2, 3, i+1)
     plt.imshow(img, cmap='gray')
     plt.title(f'LoG Circle Detection (V_min={V_min})')
 
