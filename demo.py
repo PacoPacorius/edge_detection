@@ -62,6 +62,9 @@ for i, thresh in enumerate(thresholds):
     plt.imshow(edge_img, cmap='gray')
     plt.title(f'Sobel, thresh={thresh}')
     plt.axis('off')
+    if thresh == 150:
+        edge_img_for_hough = edge_img
+
 
 # Plot the number of edge points vs threshold
 plt.subplot(331)
@@ -84,7 +87,7 @@ plt.show()
 
 # Select one of the Sobel edge images for circle detection
 # Using moderate threshold (150) for good balance
-edge_img_for_hough = sobel_edge(img, 150)
+#edge_img_for_hough = sobel_edge(img, 150)
 
 # Set parameters for circle detection
 R_max = min(img.shape) // 2  # Maximum radius is half of the smallest dimension
@@ -119,8 +122,6 @@ for i, V_min in enumerate(V_min_values):
     print("V_min =", V_min, "\tDetected ", len(radii), " circles")
 
 plt.tight_layout()
-plt.show()
-plt.figure(figsize=(10, 6))
 
 V_min_values = [600, 800, 1000] #for 0.1 scale
 for i, V_min in enumerate(V_min_values):
@@ -128,7 +129,7 @@ for i, V_min in enumerate(V_min_values):
           " with V_min = ", V_min)
     centers, radii = circ_hough.circ_hough(log_edge_img, R_max, dim, V_min)
 
-    plt.subplot(2, 3, i+1)
+    plt.subplot(3, 2, i+1)
     plt.imshow(img, cmap='gray')
     plt.title(f'LoG Circle Detection (V_min={V_min})')
 
